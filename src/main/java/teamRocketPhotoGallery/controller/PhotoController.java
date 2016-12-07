@@ -25,16 +25,16 @@ public class PhotoController {
     @Autowired
     private UserRepository userRepository;
 
-    @GetMapping("/article/create")
+    @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String create(Model model) {
-        model.addAttribute("view", "/article/create");
+    public String upload(Model model) {
+        model.addAttribute("view", "/photo/upload");
         return "base-layout";
     }
 
-    @PostMapping("/article/create")
+    @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String createProcess(PhotoBindingModel photoBindingModel) {
+    public String uploadProcess(PhotoBindingModel photoBindingModel) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         Photo photoEntity = new Photo(photoBindingModel.getTitle(), photoBindingModel.getContent(), userEntity);
@@ -42,7 +42,7 @@ public class PhotoController {
         return "redirect:/";
     }
 
-    @GetMapping("/article/{id}")
+    @GetMapping("/photo/{id}")
     public String details(Model model, @PathVariable Integer id) {
         if (!this.photoRepository.exists(id)) {
             return "redirect:/";
@@ -53,12 +53,12 @@ public class PhotoController {
             model.addAttribute("user", entityUser);
         }
         Photo photo = this.photoRepository.findOne(id);
-        model.addAttribute("article", photo);
+        model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/details");
         return "base-layout";
     }
 
-    @GetMapping("/article/edit/{id}")
+    @GetMapping("/photo/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String edit(@PathVariable Integer id, Model model) {
         if (!this.photoRepository.exists(id)) {
@@ -68,12 +68,12 @@ public class PhotoController {
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
-        model.addAttribute("article", photo);
+        model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/edit");
         return "base-layout";
     }
 
-    @PostMapping("/article/edit/{id}")
+    @PostMapping("/photo/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String editProcess(@PathVariable Integer id, PhotoBindingModel photoBindingModel) {
         if (!this.photoRepository.exists(id)) {
@@ -89,7 +89,7 @@ public class PhotoController {
         return "redirect:/photo/" + id;
     }
 
-    @GetMapping("/article/delete/{id}")
+    @GetMapping("/photo/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String delete(@PathVariable Integer id, Model model) {
         if (!this.photoRepository.exists(id)) {
@@ -99,12 +99,12 @@ public class PhotoController {
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
-        model.addAttribute("article", photo);
+        model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/delete");
         return "base-layout";
     }
 
-    @PostMapping("/article/delete/{id}")
+    @PostMapping("/photo/delete/{id}")
     @PreAuthorize("isAuthenticated()")
     public String deleteProcess(@PathVariable Integer id, PhotoBindingModel photoBindingModel) {
         if (!this.photoRepository.exists(id)) {

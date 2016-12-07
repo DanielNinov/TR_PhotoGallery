@@ -5,7 +5,7 @@ import javax.persistence.Id;
 import javax.persistence.Transient;
 
 @Entity
-@Table(name = "articles")
+@Table(name = "photos")
 public class Photo {
     private Integer id;
 

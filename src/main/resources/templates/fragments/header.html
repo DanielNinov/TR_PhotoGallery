@@ -22,8 +22,8 @@
                         </ul>
                     </li>
                     <li sec:authorize="isAuthenticated()">
-                        <a th:href="@{/photo/create}">
-                            Create Article
+                        <a th:href="@{/photo/upload}">
+                            Upload Photo
                         </a>
                     </li>
                     <li sec:authorize="isAuthenticated()">
@@ -39,12 +39,12 @@
 
                     <li sec:authorize="isAnonymous()">
                         <a th:href="@{/register}">
-                            REGISTER
+                            Register
                         </a>
                     </li>
                     <li sec:authorize="isAnonymous()">
                         <a th:href="@{/login}">
-                            LOGIN
+                            Login
                         </a>
                     </li>
                 </ul>

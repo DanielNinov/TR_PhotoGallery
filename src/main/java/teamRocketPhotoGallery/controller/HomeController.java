@@ -16,7 +16,7 @@ public class HomeController {
     public String index(Model model) {
         List<Photo> photos = this.photoRepository.findAll();
         model.addAttribute("view", "home/index");
-        model.addAttribute("articles", photos);
+        model.addAttribute("photos", photos);
         return "base-layout";
     }
 
