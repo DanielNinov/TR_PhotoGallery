@@ -45,9 +45,7 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(name = "authorId")
-    public User getAuthor() {
-        return author;
-    }
+    public User getAuthor() { return author; }
 
     public void setAuthor(User author) {
         this.author = author;
