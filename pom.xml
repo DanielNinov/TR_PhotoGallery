@@ -3,13 +3,13 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>softuni.blog</groupId>
-	<artifactId>blog</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<groupId>teamrocket.photogallery</groupId>
+	<artifactId>photogallery</artifactId>
+	<version>0.0.1-MILESTONE</version>
 	<packaging>jar</packaging>
 
-	<name>Blog</name>
-	<description>Blog Project from the Software Technologies Course</description>
+	<name>PhotoGallery</name>
+	<description>PhotoGallery Project from TeamRocket</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>
