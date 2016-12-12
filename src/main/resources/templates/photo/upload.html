@@ -21,6 +21,15 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-4 control-label" for="photo_album">Album</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="photo_album" name="albumId">
+                                <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-4">
                             <a class="btn btn-default" th:href="@{/}">Cancel</a>
                             <input type="submit" class="btn btn-primary" value="Submit"/>

@@ -22,6 +22,11 @@
                         </ul>
                     </li>
                     <li sec:authorize="isAuthenticated()">
+                        <a th:href="@{/albums/}">
+                            Albums
+                        </a>
+                    </li>
+                    <li sec:authorize="isAuthenticated()">
                         <a th:href="@{/photo/upload}">
                             Upload Photo
                         </a>

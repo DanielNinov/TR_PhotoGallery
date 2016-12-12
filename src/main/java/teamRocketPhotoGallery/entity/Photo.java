@@ -15,6 +15,8 @@ public class Photo {
 
     private User author;
 
+    private Album album;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
@@ -51,6 +53,12 @@ public class Photo {
         this.author = author;
     }
 
+    @ManyToOne()
+    @JoinColumn(nullable = false, name = "albumId")
+    public Album getAlbum(){ return album; }
+
+    public void setAlbum(Album album){ this.album = album; }
+
     @Transient
     public String getPreview() {
         Integer limit = 300;
@@ -62,10 +70,11 @@ public class Photo {
         }
     }
 
-    public Photo(String title, String content, User author) {
+    public Photo(String title, String content, User author, Album album) {
         this.title = title;
         this.content = content;
         this.author = author;
+        this.album = album;
     }
 
     public Photo() {

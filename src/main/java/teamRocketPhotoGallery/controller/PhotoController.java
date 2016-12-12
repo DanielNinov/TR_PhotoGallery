@@ -11,33 +11,52 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
+import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
+import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
 import javax.persistence.Transient;
+import java.util.List;
 
 @Controller
 public class PhotoController {
     @Autowired
     private PhotoRepository photoRepository;
+
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private AlbumRepository albumRepository;
 
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String upload(Model model) {
         model.addAttribute("view", "/photo/upload");
+
+        List<Album> albums = this.albumRepository.findAll();
+        model.addAttribute("albums", albums);
+
         return "base-layout";
     }
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String uploadProcess(PhotoBindingModel photoBindingModel) {
+
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-        Photo photoEntity = new Photo(photoBindingModel.getTitle(), photoBindingModel.getContent(), userEntity);
+        Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
+
+        Photo photoEntity = new Photo(photoBindingModel.getTitle(),
+                                        photoBindingModel.getContent(),
+                                        userEntity,
+                                        album);
+
         this.photoRepository.saveAndFlush(photoEntity);
         return "redirect:/";
     }
@@ -65,9 +84,14 @@ public class PhotoController {
             return "redirect:/";
         }
         Photo photo = this.photoRepository.findOne(id);
+
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
+
+        List<Album> albums = this.albumRepository.findAll();
+
+        model.addAttribute("albums", albums);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/edit");
         return "base-layout";
@@ -79,12 +103,19 @@ public class PhotoController {
         if (!this.photoRepository.exists(id)) {
             return "redirect:/";
         }
+
         Photo photo = this.photoRepository.findOne(id);
+
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
+
+        Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
+
+        photo.setAlbum(album);
         photo.setContent(photoBindingModel.getContent());
         photo.setTitle(photoBindingModel.getTitle());
+
         this.photoRepository.saveAndFlush(photo);
         return "redirect:/photo/" + id;
     }

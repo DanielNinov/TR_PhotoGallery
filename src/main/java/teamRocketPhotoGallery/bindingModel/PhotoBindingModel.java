@@ -8,6 +8,8 @@ public class PhotoBindingModel {
     @NotNull
     private String content;
 
+    private Integer albumId;
+
     public String getTitle() {
         return title;
     }
@@ -23,4 +25,8 @@ public class PhotoBindingModel {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public Integer getAlbumId() { return albumId; }
+
+    public void setAlbumId(Integer albumId) { this.albumId = albumId; }
 }
