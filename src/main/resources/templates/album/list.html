@@ -9,7 +9,8 @@
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
+                        <th>Album Name</th>
+                        <th>Author</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -18,6 +19,7 @@
                     <tr th:each="album : ${albums}">
                         <td th:text="${album.id}"></td>
                         <td th:text="${album.name}"></td>
+                        <td th:text="${album.author.fullName}"></td>
                         <td>
                             <a class="btn btn-danger btn-xs" th:href="@{/albums/delete/{id}(id = ${album.id})}">Delete</a>
                         </td>

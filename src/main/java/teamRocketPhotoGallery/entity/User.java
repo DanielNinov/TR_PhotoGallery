@@ -102,4 +102,7 @@ public class User {
     public boolean isAuthor(Photo photo) {
         return Objects.equals(this.getId(), photo.getAuthor().getId());
     }
+
+    @Transient
+    public boolean isAlbumAuthor (Album album) { return Objects.equals(this.getId(), album.getAuthor().getId()); }
 }

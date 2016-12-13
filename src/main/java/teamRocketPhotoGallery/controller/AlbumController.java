@@ -1,6 +1,8 @@
 package teamRocketPhotoGallery.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -8,8 +10,11 @@ import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
 import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.entity.Photo;
+import teamRocketPhotoGallery.entity.User;
 import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
+import teamRocketPhotoGallery.repository.UserRepository;
+
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,6 +30,9 @@ public class AlbumController {
 
     @Autowired
     private PhotoRepository photoRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/")
     public String list(Model model){
@@ -52,10 +60,12 @@ public class AlbumController {
             return "redirect:/albums/create";
         }
 
-        Album album = new Album(albumBindingModel.getName());
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userEntity = this.userRepository.findByEmail(user.getUsername());
+
+        Album album = new Album(albumBindingModel.getName(), userEntity);
 
         this.albumRepository.saveAndFlush(album);
-
         return "redirect:/albums/";
     }
 

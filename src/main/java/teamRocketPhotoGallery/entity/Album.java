@@ -62,8 +62,9 @@ public class Album {
         this.author = author;
     }
 
-    public Album(String name) {
+    public Album(String name, User author) {
         this.name = name;
+        this.author = author;
         this.photos = new HashSet<>();
     }
 }
