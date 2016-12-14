@@ -15,6 +15,7 @@ import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
+import javax.persistence.Transient;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -77,6 +78,10 @@ public class AlbumController {
 
         Album album = this.albumRepository.findOne(id);
 
+        if (!isUserAlbumAuthorOrAdmin(album)) {
+            return "redirect:/albums/";
+        }
+
         model.addAttribute("album", album);
         model.addAttribute("view", "album/delete");
 
@@ -98,5 +103,12 @@ public class AlbumController {
         this.albumRepository.delete(album);
 
         return "redirect:/albums/";
+    }
+
+    @Transient
+    public boolean isUserAlbumAuthorOrAdmin(Album album) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userEntity = this.userRepository.findByEmail(user.getUsername());
+        return userEntity.isAdmin() || userEntity.isAlbumAuthor(album);
     }
 }
