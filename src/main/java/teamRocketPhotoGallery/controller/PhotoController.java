@@ -10,9 +10,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import teamRocketPhotoGallery.bindingModel.CategoryBindingModel;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
+import teamRocketPhotoGallery.entity.Category;
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
+import teamRocketPhotoGallery.repository.CategoryRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
@@ -24,6 +27,10 @@ public class PhotoController {
     private PhotoRepository photoRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+
 
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
@@ -34,11 +41,13 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String uploadProcess(PhotoBindingModel photoBindingModel) {
+    public String uploadProcess(PhotoBindingModel photoBindingModel,Category category) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-        Photo photoEntity = new Photo(photoBindingModel.getTitle(), photoBindingModel.getContent(), userEntity);
+        Photo photoEntity = new Photo(photoBindingModel.getTitle(), photoBindingModel.getContent(), userEntity,category  );
         this.photoRepository.saveAndFlush(photoEntity);
+        this.categoryRepository.saveAndFlush(category);
+
         return "redirect:/";
     }
 
