@@ -4,6 +4,7 @@ package teamRocketPhotoGallery.controller.admin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,6 +47,9 @@ public class CategoryController {
     @PostMapping("/create")
     public String createProcess(CategoryBindingModel categoryBindingModel){
 
+        if (StringUtils.isEmpty(categoryBindingModel.getName())){
+         return "redirect:/admin/categories/create";
+     }
 
         Category category = new Category(categoryBindingModel.getName());
         this.categoryRepository.saveAndFlush(category);
