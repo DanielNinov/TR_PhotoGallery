@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import teamRocketPhotoGallery.bindingModel.CategoryBindingModel;
-import teamRocketPhotoGallery.controller.PhotoController;
 import teamRocketPhotoGallery.entity.Category;
 import teamRocketPhotoGallery.repository.CategoryRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;

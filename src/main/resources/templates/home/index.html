@@ -8,7 +8,7 @@
                             <h2 th:text="${photo.title}"></h2>
                         </header>
 
-                        <div>
+                        <div class="well">
                             <img th:src="${photo.content}" width="500" height="300"/>
                         </div>
 
@@ -17,7 +17,7 @@
                         <footer>
                             <div class="pull-right">
                                 <a class="btn btn-default btn-xs"
-                                   th:href="@{/photo/{id}(id=${photo.id})}">Read more &raquo;</a>
+                                   th:href="@{/photo/{id}(id=${photo.id})}">View Photo &raquo;</a>
                             </div>
                         </footer>
                     </photo>

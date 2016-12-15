@@ -5,6 +5,7 @@
                 <photo>
                     <header>
                         <h2 th:text="${photo.title}"></h2>
+                        <h3 th:text="${photo.getAlbum().name}"></h3>
                     </header>
                     <div>
                         <a th:href="${photo.content}"><img th:src="${photo.content}" width="1024" height="768"/></a>
