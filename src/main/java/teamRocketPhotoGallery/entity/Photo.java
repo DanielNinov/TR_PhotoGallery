@@ -19,9 +19,11 @@ public class Photo {
 
     private User author;
 
+    private Category category;
+
     private Album album;
 
-       @Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
@@ -58,10 +60,21 @@ public class Photo {
     }
 
     @ManyToOne()
+    @JoinColumn(nullable = false, name = "categoryId")
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) {
+        this.category = category;
+    }
+
+    @ManyToOne
     @JoinColumn(nullable = false, name = "albumId")
     public Album getAlbum(){ return album; }
 
     public void setAlbum(Album album){ this.album = album; }
+
 
     @Transient
     public String getPreview() {
@@ -74,11 +87,14 @@ public class Photo {
         }
     }
 
-    public Photo(String title, String content, User author, Album album) {
+
+
+    public Photo(String title, String content, User author, Album album,Category category) {
         this.title = title;
         this.content = content;
         this.author = author;
-        this.album = album;
+        this.album = album ;
+        this.category = category;
 
     }
 
