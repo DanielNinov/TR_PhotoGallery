@@ -2,6 +2,7 @@ package teamRocketPhotoGallery.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,6 +29,7 @@ public class User {
 
         this.roles = new HashSet<>();
         this.photos = new HashSet<>();
+        this.comments = new HashSet<>();
     }
 
     public User() {
@@ -105,4 +107,13 @@ public class User {
 
     @Transient
     public boolean isAlbumAuthor (Album album) { return Objects.equals(this.getId(), album.getAuthor().getId()); }
+
+    private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "author")
+    public Set<Comment> getComments() {return comments;}
+
+    public void setComments(Set<Comment> comments){this.comments = comments;}
+
+
 }

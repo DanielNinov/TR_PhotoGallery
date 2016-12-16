@@ -3,6 +3,10 @@ package teamRocketPhotoGallery.entity;
 import javax.persistence.*;
 import javax.persistence.Id;
 import javax.persistence.Transient;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "photos")
@@ -17,7 +21,7 @@ public class Photo {
 
     private Album album;
 
-    @Id
+       @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
         return id;
@@ -75,8 +79,10 @@ public class Photo {
         this.content = content;
         this.author = author;
         this.album = album;
+
     }
 
     public Photo() {
     }
+
 }
