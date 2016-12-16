@@ -11,10 +11,16 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
+
 import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.entity.Comment;
+
+import teamRocketPhotoGallery.entity.Category;
+
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
+import teamRocketPhotoGallery.repository.CategoryRepository;
+import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.CommentRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
@@ -31,6 +37,8 @@ public class PhotoController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private AlbumRepository albumRepository;
@@ -51,19 +59,27 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String uploadProcess(PhotoBindingModel photoBindingModel) {
+
+    public String uploadProcess(PhotoBindingModel photoBindingModel,Category category) {
+
+
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User userEntity = this.userRepository.findByEmail(user.getUsername());
+
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
+
 
         Photo photoEntity = new Photo(photoBindingModel.getTitle(),
                                         photoBindingModel.getContent(),
                                         userEntity,
-                                        album);
+                                        album,
+                                        category );
 
         this.photoRepository.saveAndFlush(photoEntity);
+        this.categoryRepository.saveAndFlush(category);
+
         return "redirect:/";
     }
 
