@@ -3,6 +3,7 @@
         <div class="row">
             <div class="col-md-12">
                 <photo>
+
                     <header>
                         <h2 th:text="${photo.title}"></h2>
                         <h3 th:text="${photo.getAlbum().name}"></h3>
@@ -11,14 +12,19 @@
                         <a th:href="${photo.content}"><img th:src="${photo.content}" width="1024" height="768"/></a>
                     </div>
                     <small class="author" th:text="${photo.author.fullName}"></small>
+
+
                     <footer>
                         <div class="pull-right">
                             <a class="btn btn-default btn-xs" th:href="@{/}">&laquo; back</a>
                             <th:block sec:authorize="isAuthenticated()" th:if="${user.isAdmin() OR user.isAuthor(photo)}">
                                 <a class="btn btn-success btn-xs" th:href="@{/photo/edit/{id}(id = ${photo.id})}">Edit</a>
                                 <a class="btn btn-danger btn-xs" th:href="@{/photo/delete/{id}(id = ${photo.id})}">Delete</a>
+                                <a class="btn btn-primary" th:href="@{/comment/create/{id}(id = ${photo.id})}">Comment</a>
+
                             </th:block>
                         </div>
+
                     </footer>
                 </photo>
             </div>
