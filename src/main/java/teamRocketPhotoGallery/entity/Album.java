@@ -24,6 +24,8 @@ public class Album {
 
     private User author;
 
+    private Category category;
+
     public Album(){}
 
     @Id
@@ -62,9 +64,18 @@ public class Album {
         this.author = author;
     }
 
-    public Album(String name, User author) {
+    @ManyToOne()
+    @JoinColumn(nullable = false, name = "categoryId")
+    public Category getCategory() {
+        return category;
+    }
+
+    public void setCategory(Category category) { this.category = category; }
+
+    public Album(String name, User author, Category category) {
         this.name = name;
         this.author = author;
+        this.category = category;
         this.photos = new HashSet<>();
     }
 }

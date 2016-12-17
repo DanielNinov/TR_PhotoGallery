@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
 import teamRocketPhotoGallery.entity.Album;
+import teamRocketPhotoGallery.entity.Category;
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
 import teamRocketPhotoGallery.repository.AlbumRepository;
+import teamRocketPhotoGallery.repository.CategoryRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
@@ -35,6 +37,9 @@ public class AlbumController {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private CategoryRepository categoryRepository;
+
     @GetMapping("/")
     public String list(Model model){
         model.addAttribute("view", "album/list");
@@ -52,6 +57,10 @@ public class AlbumController {
     public String create(Model model){
         model.addAttribute("view", "album/create");
 
+        List<Category> categories = this.categoryRepository.findAll();
+
+        model.addAttribute("categories", categories);
+
         return "base-layout";
     }
 
@@ -63,8 +72,9 @@ public class AlbumController {
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
+        Category category = this.categoryRepository.findOne(albumBindingModel.getCategoryId());
 
-        Album album = new Album(albumBindingModel.getName(), userEntity);
+        Album album = new Album(albumBindingModel.getName(), userEntity,category);
 
         this.albumRepository.saveAndFlush(album);
         return "redirect:/albums/";
