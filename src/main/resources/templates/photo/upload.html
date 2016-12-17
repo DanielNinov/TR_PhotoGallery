@@ -19,19 +19,28 @@
                             <textarea class="form-control" rows="1" id="article_content" name="content"></textarea>
                         </div>
                     </div>
-
+                    <div class="form-group">
+                        <div class="col-sm-6" id="drop-zone">
+                            Drop files here...
+                            <div id="clickHere">
+                                or click here..
+                                <input type="file" name="file" id="file"/>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_album">Album</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="photo_album" name="albumId">
-                                <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"></option>
+                                <option th:each="album : ${albums}" th:value="${album.id}"
+                                        th:text="${album.name}"></option>
                             </select>
                         </div>
                     </div>
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-4">
                             <a class="btn btn-default" th:href="@{/}">Cancel</a>
-                            <input type="submit" class="btn btn-primary" value="Submit"/>
+                            <input type="submit" class="btn btn-primary" value="Upload"/>
                             <a th:href="@{/albums/create}" class="btn btn-success">New Album</a>
                         </div>
                     </div>
