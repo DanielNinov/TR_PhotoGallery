@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teamRocketPhotoGallery.bindingModel.CategoryBindingModel;
 import teamRocketPhotoGallery.entity.Category;
 import teamRocketPhotoGallery.entity.Photo;
@@ -47,9 +48,11 @@ public class CategoryController {
         return "base-layout";
     }
     @PostMapping("/create")
-    public String createProcess(CategoryBindingModel categoryBindingModel){
+    public String createProcess(CategoryBindingModel categoryBindingModel, RedirectAttributes redirectAttributes){
 
         if (StringUtils.isEmpty(categoryBindingModel.getName())){
+            redirectAttributes.addFlashAttribute("error", "The form must not be empty");
+
          return "redirect:/admin/categories/create";
      }
 

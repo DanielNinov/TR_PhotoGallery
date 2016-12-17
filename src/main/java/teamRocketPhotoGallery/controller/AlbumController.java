@@ -6,6 +6,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
 import teamRocketPhotoGallery.entity.Album;
@@ -65,8 +66,9 @@ public class AlbumController {
     }
 
     @PostMapping("/create")
-    public String createProcess(AlbumBindingModel albumBindingModel){
+    public String createProcess(AlbumBindingModel albumBindingModel, RedirectAttributes redirectAttributes){
         if(StringUtils.isEmpty(albumBindingModel.getName())){
+            redirectAttributes.addFlashAttribute("error", "The form must not be empty");
             return "redirect:/albums/create";
         }
 
