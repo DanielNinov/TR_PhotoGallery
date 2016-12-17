@@ -11,15 +11,24 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
+
 import teamRocketPhotoGallery.entity.Album;
+import teamRocketPhotoGallery.entity.Comment;
+
+import teamRocketPhotoGallery.entity.Category;
+
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
+import teamRocketPhotoGallery.repository.CategoryRepository;
+import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.repository.AlbumRepository;
+import teamRocketPhotoGallery.repository.CommentRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
 import javax.persistence.Transient;
 import java.util.List;
+import java.util.Set;
 
 @Controller
 public class PhotoController {
@@ -28,9 +37,14 @@ public class PhotoController {
 
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private AlbumRepository albumRepository;
+
+    @Autowired
+    private CommentRepository commentRepository;
 
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
@@ -45,19 +59,27 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String uploadProcess(PhotoBindingModel photoBindingModel) {
+
+    public String uploadProcess(PhotoBindingModel photoBindingModel,Category category) {
+
+
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         User userEntity = this.userRepository.findByEmail(user.getUsername());
+
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
+
 
         Photo photoEntity = new Photo(photoBindingModel.getTitle(),
                                         photoBindingModel.getContent(),
                                         userEntity,
-                                        album);
+                                        album,
+                                        category );
 
         this.photoRepository.saveAndFlush(photoEntity);
+        this.categoryRepository.saveAndFlush(category);
+
         return "redirect:/";
     }
 
@@ -69,11 +91,14 @@ public class PhotoController {
         if (!(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken)) {
             UserDetails principal = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
             User entityUser = this.userRepository.findByEmail(principal.getUsername());
+
             model.addAttribute("user", entityUser);
         }
+        List<Comment> comments = this.commentRepository.findAll();
         Photo photo = this.photoRepository.findOne(id);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/details");
+        model.addAttribute("comment", comments);
         return "base-layout";
     }
 
