@@ -1,28 +1,14 @@
-<main xmlns:th="http://www.w3.org/1999/xhtml">
+<main>
     <div class="container body-content">
         <div class="row">
-            <th:block th:each="photo : ${photos}">
-                <div class="col-md-6">
-                    <photo>
-                        <header>
-                            <h2 th:text="${photo.title}"></h2>
-                        </header>
-
-                        <div class="well">
-                            <img th:src="${photo.content}" width="500" height="300"/>
-                        </div>
-
-                        <small class="author" th:text="${photo.author.fullName}"></small>
-
-                        <footer>
-                            <div class="pull-right">
-                                <a class="btn btn-default btn-xs"
-                                   th:href="@{/photo/{id}(id=${photo.id})}">View Photo &raquo;</a>
-                            </div>
-                        </footer>
-                    </photo>
-                </div>
-            </th:block>
+            <div class="col-md-6" th:each="category : ${categories}">
+                <header>
+                    <h2>
+                        <a th:href="@{/category/{id}(id=${category.id})}" th:text="${category.name + ' (' + #sets.size(category.photos) + ')'}">
+                        </a>
+                    </h2>
+                </header>
+            </div>
         </div>
     </div>
 </main>

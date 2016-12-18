@@ -46,6 +46,16 @@ public class PhotoController {
     @Autowired
     private CommentRepository commentRepository;
 
+    @GetMapping("/category/{id}")
+    public String listPhotos(Model model, @PathVariable Integer id) {
+        Set<Photo> photos = this.categoryRepository.findOne(id).getPhotos();
+
+        model.addAttribute("view", "photo/list-photos");
+        model.addAttribute("photos", photos);
+
+        return "base-layout";
+    }
+
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String upload(Model model) {

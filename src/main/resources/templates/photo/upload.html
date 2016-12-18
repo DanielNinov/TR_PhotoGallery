@@ -20,13 +20,14 @@
                     </div>
                 </div>
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="article_category">Category</label>
+                        <label class="col-sm-4 control-label" for="photo_category">Category</label>
                         <div class="col-sm-6">
-                            <select class="form-control" id="article_category" name="categoryId">
-                                <option th:each="category : ${categories}" th:value = "${category.id}" th:text = "${category.name}"></option>
-                                </select>
+                            <select class="form-control" id="photo_category" name="categoryId">
+                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            </select>
                         </div>
                     </div>
+
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_album">Album</label>
