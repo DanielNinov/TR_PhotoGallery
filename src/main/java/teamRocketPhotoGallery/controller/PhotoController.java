@@ -20,7 +20,7 @@ import teamRocketPhotoGallery.entity.Category;
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
 import teamRocketPhotoGallery.repository.CategoryRepository;
-import teamRocketPhotoGallery.entity.Album;
+
 import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.CommentRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
@@ -54,13 +54,16 @@ public class PhotoController {
         List<Album> albums = this.albumRepository.findAll();
         model.addAttribute("albums", albums);
 
+        List<Category> categories = this.categoryRepository.findAll();
+        model.addAttribute("categories", categories);
+
         return "base-layout";
     }
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
 
-    public String uploadProcess(PhotoBindingModel photoBindingModel,Category category) {
+    public String uploadProcess(PhotoBindingModel photoBindingModel) {
 
 
 
@@ -70,6 +73,7 @@ public class PhotoController {
 
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
 
+        Category category = this.categoryRepository.findOne(photoBindingModel.getCategoryId());
 
         Photo photoEntity = new Photo(photoBindingModel.getTitle(),
                                         photoBindingModel.getContent(),
@@ -116,10 +120,14 @@ public class PhotoController {
 
         List<Album> albums = this.albumRepository.findAll();
 
+        List<Category> categories =this.categoryRepository.findAll();
+
         model.addAttribute("albums", albums);
+        model.addAttribute("categories", categories);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/edit");
         return "base-layout";
+
     }
 
     @PostMapping("/photo/edit/{id}")
@@ -137,7 +145,10 @@ public class PhotoController {
 
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
 
+        Category category =this.categoryRepository.findOne(photoBindingModel.getCategoryId());
+
         photo.setAlbum(album);
+        photo.setCategory(category);
         photo.setContent(photoBindingModel.getContent());
         photo.setTitle(photoBindingModel.getTitle());
 

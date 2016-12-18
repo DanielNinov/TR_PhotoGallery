@@ -14,9 +14,17 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="article_content">Image URL</label>
+                    <label class="col-sm-4 control-label" for="article_content">Image URL</label>
+                    <div class="col-sm-6">
+                        <textarea class="form-control" rows="1" id="article_content" name="content"></textarea>
+                    </div>
+                </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_category">Category</label>
                         <div class="col-sm-6">
-                            <textarea class="form-control" rows="1" id="article_content" name="content"></textarea>
+                            <select class="form-control" id="article_category" name="categoryId">
+                                <option th:each="category : ${categories}" th:value = "${category.id}" th:text = "${category.name}"></option>
+                                </select>
                         </div>
                     </div>
 

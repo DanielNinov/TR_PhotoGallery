@@ -20,6 +20,15 @@
                                       th:field="${photo.content}"></textarea>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="article_category">Category</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="article_category" name="categoryId">
+                                <option th:each="category : ${categories}" th:value = "${category.id}" th:text = "${category.name}"></option>
+                            </select>
+                        </div>
+                    </div>
+
 
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-4">
@@ -27,6 +36,7 @@
                             <input type="submit" class="btn btn-success" value="Edit"/>
                         </div>
                     </div>
+
                 </fieldset>
             </form>
         </div>

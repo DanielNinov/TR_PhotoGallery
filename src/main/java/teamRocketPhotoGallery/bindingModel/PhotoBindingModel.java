@@ -10,6 +10,8 @@ public class PhotoBindingModel {
 
     private Integer albumId;
 
+    private Integer categoryId;
+
     public String getTitle() {
         return title;
     }
@@ -29,4 +31,12 @@ public class PhotoBindingModel {
     public Integer getAlbumId() { return albumId; }
 
     public void setAlbumId(Integer albumId) { this.albumId = albumId; }
+
+    public Integer getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 }
