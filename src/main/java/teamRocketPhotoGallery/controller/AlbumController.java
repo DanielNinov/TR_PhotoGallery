@@ -5,7 +5,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
@@ -42,7 +45,7 @@ public class AlbumController {
     private CategoryRepository categoryRepository;
 
     @GetMapping("/")
-    public String list(Model model){
+    public String list(Model model) {
         model.addAttribute("view", "album/list");
 
         List<Album> albums = this.albumRepository.findAll();
@@ -55,7 +58,7 @@ public class AlbumController {
     }
 
     @GetMapping("/create")
-    public String create(Model model){
+    public String create(Model model) {
         model.addAttribute("view", "album/create");
 
         List<Category> categories = this.categoryRepository.findAll();
@@ -66,8 +69,8 @@ public class AlbumController {
     }
 
     @PostMapping("/create")
-    public String createProcess(AlbumBindingModel albumBindingModel, RedirectAttributes redirectAttributes){
-        if(StringUtils.isEmpty(albumBindingModel.getName())){
+    public String createProcess(AlbumBindingModel albumBindingModel, RedirectAttributes redirectAttributes) {
+        if (StringUtils.isEmpty(albumBindingModel.getName())) {
             redirectAttributes.addFlashAttribute("error", "The form must not be empty");
             return "redirect:/albums/create";
         }
@@ -76,15 +79,15 @@ public class AlbumController {
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         Category category = this.categoryRepository.findOne(albumBindingModel.getCategoryId());
 
-        Album album = new Album(albumBindingModel.getName(), userEntity,category);
+        Album album = new Album(albumBindingModel.getName(), userEntity, category);
 
         this.albumRepository.saveAndFlush(album);
         return "redirect:/albums/";
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable Integer id){
-        if(!this.albumRepository.exists(id)){
+    public String delete(Model model, @PathVariable Integer id) {
+        if (!this.albumRepository.exists(id)) {
             return "redirect:/albums/";
         }
 
@@ -102,13 +105,13 @@ public class AlbumController {
 
     @PostMapping("/delete/{id}")
     public String deleteProcess(@PathVariable Integer id) {
-        if(!this.albumRepository.exists(id)){
+        if (!this.albumRepository.exists(id)) {
             return "redirect:/albums/";
         }
 
         Album album = this.albumRepository.findOne(id);
 
-        for(Photo photo : album.getPhotos()){
+        for (Photo photo : album.getPhotos()) {
             this.photoRepository.delete(photo);
         }
 

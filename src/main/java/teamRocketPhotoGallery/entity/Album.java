@@ -1,7 +1,5 @@
 package teamRocketPhotoGallery.entity;
 
-import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
-
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,7 +12,7 @@ import java.util.Set;
 // (Currently works with the URL upload)
 
 @Entity
-@Table(name="albums")
+@Table(name = "albums")
 public class Album {
     private Integer id;
 
@@ -26,13 +24,19 @@ public class Album {
 
     private Category category;
 
-    public Album(){}
+    public Album() {
+    }
+
+    public Album(String name, User author, Category category) {
+        this.name = name;
+        this.author = author;
+        this.category = category;
+        this.photos = new HashSet<>();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
-        return id;
-    }
+    public Integer getId() { return id; }
 
     public void setId(Integer id) {
         this.id = id;
@@ -70,12 +74,7 @@ public class Album {
         return category;
     }
 
-    public void setCategory(Category category) { this.category = category; }
-
-    public Album(String name, User author, Category category) {
-        this.name = name;
-        this.author = author;
+    public void setCategory(Category category) {
         this.category = category;
-        this.photos = new HashSet<>();
     }
 }

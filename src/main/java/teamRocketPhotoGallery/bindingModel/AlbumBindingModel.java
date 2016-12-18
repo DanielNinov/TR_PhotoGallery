@@ -19,7 +19,11 @@ public class AlbumBindingModel {
         this.name = name;
     }
 
-    public Integer getCategoryId() { return categoryId; }
+    public Integer getCategoryId() {
+        return categoryId;
+    }
 
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+    public void setCategoryId(Integer categoryId) {
+        this.categoryId = categoryId;
+    }
 }
