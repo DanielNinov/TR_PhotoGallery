@@ -3,23 +3,24 @@
         <div class="well">
             <form class="form-horizontal" th:action="@{/photo/edit/{id}(id=${photo.id})}" method="POST">
                 <fieldset>
-                    <legend>Edit Post</legend>
+                    <legend>Edit Photo</legend>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="article_title">Post Title</label>
+                        <label class="col-sm-4 control-label" for="photo_title">Photo Title</label>
                         <div class="col-sm-4 ">
-                            <input type="text" class="form-control" id="article_title" placeholder="Post Title"
+                            <input type="text" class="form-control" id="photo_title" placeholder="Photo Title"
                                    name="title" th:value="${photo.title}"/>
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="article_content">Content</label>
+                        <label class="col-sm-4 control-label" for="photo_content">Content</label>
                         <div class="col-sm-6">
-                            <textarea class="form-control" rows="6" id="article_content" name="content"
+                            <textarea class="form-control" rows="6" id="photo_content" name="content"
                                       th:field="${photo.content}"></textarea>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_category">Category</label>
                         <div class="col-sm-6">
@@ -32,12 +33,22 @@
                     </div>
 
                     <div class="form-group">
+                        <label class="col-sm-4 control-label" for="photo_album">Album</label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="photo_album" name="albumId">
+                                <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"
+                                        th:selected="${album.id==photo.album.id}">
+                                </option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_tags">Tags</label>
                         <div class="col-sm-6">
                             <input type="text" class="form-control" id="photo_tags" placeholder="Tags" name="tagString" th:value="${tags}"/>
                         </div>
                     </div>
-
 
                     <div class="form-group">
                         <div class="col-sm-4 col-sm-offset-4">
