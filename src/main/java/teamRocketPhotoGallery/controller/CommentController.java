@@ -19,6 +19,8 @@ import teamRocketPhotoGallery.repository.CommentRepository;
 import teamRocketPhotoGallery.repository.PhotoRepository;
 import teamRocketPhotoGallery.repository.UserRepository;
 
+import javax.persistence.Transient;
+
 /**
  * Created by petar on 15/12/2016.
  */
@@ -65,4 +67,40 @@ public class CommentController {
         return "redirect:/";
 
     }
+    @GetMapping("/comment/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String delete(@PathVariable Integer id, Model model) {
+        if (!this.commentRepository.exists(id)) {
+            return "redirect:/";
+        }
+        Comment comment = this.commentRepository.findOne(id);
+        if (!isUserAdmin(comment)) {
+            return "redirect:/comment/" + id;
+        }
+        model.addAttribute("comment", comment);
+        model.addAttribute("view", "comment/delete");
+        return "base-layout";
+    }
+
+    @PostMapping("/comment/delete/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public String deleteProcess(@PathVariable Integer id, CommentBindingModel commentBindingModel) {
+        if (!this.commentRepository.exists(id)) {
+            return "redirect:/";
+        }
+        Comment comment = this.commentRepository.findOne(id);
+        if (!isUserAdmin(comment)) {
+            return "redirect:/comment/" + id;
+        }
+        this.commentRepository.delete(comment);
+        return "redirect:/";
+    }
+
+    @Transient
+    public boolean isUserAdmin(Comment comment) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userEntity = this.userRepository.findByEmail(user.getUsername());
+        return userEntity.isAdmin();
+    }
+
 }
