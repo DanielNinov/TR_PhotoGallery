@@ -110,4 +110,13 @@ public class Photo {
     public Photo() {
     }
 
+    private Set<Comment> comments;
+
+    @OneToMany(mappedBy = "author")
+    public Set<Comment> getComments() {return comments;}
+
+    public void setComments(Set<Comment> comments){this.comments = comments;}
+
+
+
 }

@@ -164,6 +164,8 @@ public class PhotoController {
             return "redirect:/";
         }
         Photo photo = this.photoRepository.findOne(id);
+
+
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
@@ -179,9 +181,15 @@ public class PhotoController {
             return "redirect:/";
         }
         Photo photo = this.photoRepository.findOne(id);
+
         if (!isUserAuthorOrAdmin(photo)) {
             return "redirect:/photo/" + id;
         }
+
+        for (Comment comment : photo.getComments()){
+            this.commentRepository.delete(comment);
+        }
+
         this.photoRepository.delete(photo);
         return "redirect:/";
     }
