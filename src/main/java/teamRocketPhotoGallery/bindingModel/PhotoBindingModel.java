@@ -12,6 +12,16 @@ public class PhotoBindingModel {
 
     private Integer categoryId;
 
+    private String tagString;
+
+    public String getTagString() {
+        return tagString;
+    }
+
+    public void setTagString(String tagString) {
+        this.tagString = tagString;
+    }
+
     public String getTitle() {
         return title;
     }

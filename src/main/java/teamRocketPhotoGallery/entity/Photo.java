@@ -23,6 +23,8 @@ public class Photo {
 
     private Album album;
 
+    private Set<Tag> tags;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Integer getId() {
@@ -75,6 +77,15 @@ public class Photo {
 
     public void setAlbum(Album album){ this.album = album; }
 
+    @ManyToMany()
+    @JoinColumn(table = "photos_tags")
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
     @Transient
     public String getPreview() {
@@ -87,15 +98,13 @@ public class Photo {
         }
     }
 
-
-
-    public Photo(String title, String content, User author, Album album,Category category) {
+    public Photo(String title, String content, User author, Album album, Category category, HashSet<Tag> tags) {
         this.title = title;
         this.content = content;
         this.author = author;
         this.album = album ;
         this.category = category;
-
+        this.tags = tags;
     }
 
     public Photo() {

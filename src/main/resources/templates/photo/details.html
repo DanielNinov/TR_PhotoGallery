@@ -12,7 +12,9 @@
                         <a th:href="${photo.content}"><img th:src="${photo.content}" width="1024" height="768"/></a>
                     </div>
                     <small class="author" th:text="${photo.author.fullName}"></small>
-
+                    <p>
+                        <a class="btn btn-default btn-xs" th:each="tag:${photo.tags}" th:href="@{/tag/{name}(name=${tag.name})}" th:text="${tag.name}"></a>
+                    </p>
 
                     <footer>
                         <div class="pull-right">
@@ -21,7 +23,6 @@
                                 <a class="btn btn-success btn-xs" th:href="@{/photo/edit/{id}(id = ${photo.id})}">Edit</a>
                                 <a class="btn btn-danger btn-xs" th:href="@{/photo/delete/{id}(id = ${photo.id})}">Delete</a>
                                 <a class="btn btn-primary" th:href="@{/comment/create/{id}(id = ${photo.id})}">Comment</a>
-
                             </th:block>
                         </div>
 

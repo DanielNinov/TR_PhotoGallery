@@ -12,23 +12,15 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
 
-import teamRocketPhotoGallery.entity.Album;
-import teamRocketPhotoGallery.entity.Comment;
+import teamRocketPhotoGallery.entity.*;
 
-import teamRocketPhotoGallery.entity.Category;
-
-import teamRocketPhotoGallery.entity.Photo;
-import teamRocketPhotoGallery.entity.User;
-import teamRocketPhotoGallery.repository.CategoryRepository;
-
-import teamRocketPhotoGallery.repository.AlbumRepository;
-import teamRocketPhotoGallery.repository.CommentRepository;
-import teamRocketPhotoGallery.repository.PhotoRepository;
-import teamRocketPhotoGallery.repository.UserRepository;
+import teamRocketPhotoGallery.repository.*;
 
 import javax.persistence.Transient;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 public class PhotoController {
@@ -45,6 +37,9 @@ public class PhotoController {
 
     @Autowired
     private CommentRepository commentRepository;
+
+    @Autowired
+    private TagRepository tagRepository;
 
     @GetMapping("/category/{id}")
     public String listPhotos(Model model, @PathVariable Integer id) {
@@ -72,28 +67,22 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-
     public String uploadProcess(PhotoBindingModel photoBindingModel) {
-
-
-
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
-
         Category category = this.categoryRepository.findOne(photoBindingModel.getCategoryId());
+        HashSet<Tag> tags = this.findTagsFromString(photoBindingModel.getTagString());
 
         Photo photoEntity = new Photo(photoBindingModel.getTitle(),
                                         photoBindingModel.getContent(),
                                         userEntity,
                                         album,
-                                        category );
+                                        category,
+                                        tags);
 
         this.photoRepository.saveAndFlush(photoEntity);
         this.categoryRepository.saveAndFlush(category);
-
         return "redirect:/";
     }
 
@@ -129,11 +118,12 @@ public class PhotoController {
         }
 
         List<Album> albums = this.albumRepository.findAll();
-
         List<Category> categories =this.categoryRepository.findAll();
+        String tagString = photo.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "));
 
         model.addAttribute("albums", albums);
         model.addAttribute("categories", categories);
+        model.addAttribute("tags", tagString);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/edit");
         return "base-layout";
@@ -154,13 +144,14 @@ public class PhotoController {
         }
 
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
-
         Category category =this.categoryRepository.findOne(photoBindingModel.getCategoryId());
+        HashSet<Tag> tags = this.findTagsFromString(photoBindingModel.getTagString());
 
         photo.setAlbum(album);
         photo.setCategory(category);
         photo.setContent(photoBindingModel.getContent());
         photo.setTitle(photoBindingModel.getTitle());
+        photo.setTags(tags);
 
         this.photoRepository.saveAndFlush(photo);
         return "redirect:/photo/" + id;
@@ -200,5 +191,23 @@ public class PhotoController {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         return userEntity.isAdmin() || userEntity.isAuthor(photo);
+    }
+
+    private HashSet<Tag> findTagsFromString(String tagString) {
+        HashSet<Tag> tags = new HashSet<>();
+        String[] tagNames = tagString.split(",\\s*");
+
+        for(String tagName : tagNames){
+            Tag currentTag = this.tagRepository.findByName(tagName);
+
+            if(currentTag == null){
+                currentTag = new Tag(tagName);
+                this.tagRepository.saveAndFlush(currentTag);
+            }
+
+            tags.add(currentTag);
+        }
+
+        return tags;
     }
 }
