@@ -16,6 +16,18 @@
                         <a class="btn btn-default btn-xs" th:each="tag:${photo.tags}" th:href="@{/tag/{name}(name=${tag.name})}" th:text="${tag.name}"></a>
                     </p>
 
+
+                    <p>
+
+                        <th:block th:each="comment : ${comments}">
+                    <p>
+                                <td th:text="${comment.content}"></td>
+
+                    </p>
+                        </th:block>
+
+                    </p>
+
                     <footer>
                         <div class="pull-right">
                             <a class="btn btn-default btn-xs" th:href="@{/}">&laquo; back</a>

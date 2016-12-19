@@ -40,6 +40,7 @@ public class CommentController {
         model.addAttribute("id", id);
         model.addAttribute("view", "/comment/create");
 
+
         return "base-layout";
 
     }

@@ -101,7 +101,7 @@ public class PhotoController {
         Photo photo = this.photoRepository.findOne(id);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/details");
-        model.addAttribute("comment", comments);
+        model.addAttribute("comments", comments);
         return "base-layout";
     }
 
