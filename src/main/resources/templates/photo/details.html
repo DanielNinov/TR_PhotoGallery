@@ -30,8 +30,8 @@
                             <tbody>
                             <tr th:each="comment : ${comments}">
                                 <td th:text="${comment.content}"></td>
-                                <td th:text="${user.fullName}"></td>
-                            <td th:class="${user.isAdmin() ? 'info' : null}">
+                                <td th:text="${comment.author.fullName}"></td>
+                            <td sec:authorize="isAuthenticated()" th:class="${user.isAdmin() ? 'info' : null}">
 
 
                                     <a class="btn btn-danger btn-xs" th:href="@{/comment/delete/{id}(id = ${comment.id})}">Delete</a>
@@ -48,8 +48,8 @@
                             <th:block sec:authorize="isAuthenticated()" th:if="${user.isAdmin() OR user.isAuthor(photo)}">
                                 <a class="btn btn-success btn-xs" th:href="@{/photo/edit/{id}(id = ${photo.id})}">Edit</a>
                                 <a class="btn btn-danger btn-xs" th:href="@{/photo/delete/{id}(id = ${photo.id})}">Delete</a>
-                                <a class="btn btn-primary" th:href="@{/comment/create/{id}(id = ${photo.id})}">Comment</a>
                             </th:block>
+                                <a class="btn btn-primary" th:href="@{/comment/create/{id}(id = ${photo.id})}">Comment</a>
                         </div>
 
                     </footer>

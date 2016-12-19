@@ -100,7 +100,7 @@ public class CommentController {
     public boolean isUserAdmin(Comment comment) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-        return userEntity.isAdmin();
+        return userEntity.isAdmin() || userEntity.isCommentAuthor(comment);
     }
 
 }

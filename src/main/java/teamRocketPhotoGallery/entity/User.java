@@ -108,6 +108,9 @@ public class User {
     @Transient
     public boolean isAlbumAuthor (Album album) { return Objects.equals(this.getId(), album.getAuthor().getId()); }
 
+    @Transient
+    public boolean isCommentAuthor (Comment comment) { return Objects.equals(this.getId(), comment.getAuthor().getId()); }
+
     private Set<Comment> comments;
 
     @OneToMany(mappedBy = "author")
