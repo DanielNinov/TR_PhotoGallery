@@ -58,8 +58,7 @@ public class CategoryController {
         if (StringUtils.isEmpty(categoryBindingModel.getName())){
             redirectAttributes.addFlashAttribute("error", "The form must not be empty");
             return "redirect:/admin/categories/create";
-     }
-
+        }
 
         Category category = new Category(categoryBindingModel.getName());
         this.categoryRepository.saveAndFlush(category);

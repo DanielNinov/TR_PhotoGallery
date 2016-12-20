@@ -53,7 +53,6 @@ public class AlbumController {
         albums = albums.stream().sorted(Comparator.comparingInt(Album::getId)).collect(Collectors.toList());
 
         model.addAttribute("albums", albums);
-
         return "base-layout";
     }
 
@@ -64,7 +63,6 @@ public class AlbumController {
         List<Category> categories = this.categoryRepository.findAll();
 
         model.addAttribute("categories", categories);
-
         return "base-layout";
     }
 
@@ -100,7 +98,6 @@ public class AlbumController {
         model.addAttribute("album", album);
         model.addAttribute("categories", categories);
         model.addAttribute("view", "album/edit");
-
         return "base-layout";
     }
 
@@ -115,8 +112,8 @@ public class AlbumController {
 
         album.setName(albumBindingModel.getName());
         album.setCategory(category);
-        this.albumRepository.saveAndFlush(album);
 
+        this.albumRepository.saveAndFlush(album);
         return "redirect:/albums/";
     }
 
@@ -134,7 +131,6 @@ public class AlbumController {
 
         model.addAttribute("album", album);
         model.addAttribute("view", "album/delete");
-
         return "base-layout";
     }
 
@@ -151,7 +147,6 @@ public class AlbumController {
         }
 
         this.albumRepository.delete(album);
-
         return "redirect:/albums/";
     }
 

@@ -44,7 +44,6 @@ public class CommentController {
         model.addAttribute("id", id);
         model.addAttribute("view", "/comment/create");
 
-
         return "base-layout";
 
     }
@@ -68,9 +67,7 @@ public class CommentController {
         );
 
         this.commentRepository.saveAndFlush(commentEntity);
-
         return "redirect:/";
-
     }
     @GetMapping("/comment/delete/{id}")
     @PreAuthorize("isAuthenticated()")

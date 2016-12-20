@@ -87,17 +87,6 @@ public class Photo {
         this.tags = tags;
     }
 
-    @Transient
-    public String getPreview() {
-        Integer limit = 300;
-        Integer length = this.getContent().length();
-        if (length > limit) {
-            return this.getContent().substring(0, limit) + "...";
-        } else {
-            return this.getContent();
-        }
-    }
-
     public Photo(String title, String content, User author, Album album, Category category, HashSet<Tag> tags) {
         this.title = title;
         this.content = content;
@@ -116,7 +105,5 @@ public class Photo {
     public Set<Comment> getComments() {return comments;}
 
     public void setComments(Set<Comment> comments){this.comments = comments;}
-
-
 
 }
