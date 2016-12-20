@@ -21,6 +21,7 @@
                         <td th:text="${album.author.fullName}"></td>
                         <td th:text="${album.category.name}"></td>
                         <td>
+                            <a class="btn btn-warning btn-xs" th:href="@{/albums/edit/{id}(id = ${album.id})}">Edit</a>
                             <a class="btn btn-danger btn-xs" th:href="@{/albums/delete/{id}(id = ${album.id})}">Delete</a>
                         </td>
                     </tr>

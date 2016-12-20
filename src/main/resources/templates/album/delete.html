@@ -3,10 +3,10 @@
         <div class="well">
             <form class="form-horizontal" th:action="@{/albums/delete/{id}(id=${album.id})}" method="POST">
                 <fieldset>
-                    <legend>Delete Category</legend>
+                    <legend>Delete Album</legend>
 
                     <div class="form-group">
-                        <label class="col-sm-4 control-label" for="album_name">Category Name</label>
+                        <label class="col-sm-4 control-label" for="album_name">Album Name</label>
                         <div class="col-sm-4 ">
                             <input type="text" class="form-control" id="album_name" placeholder="Album Name" name="name" th:value="${album.name}" disabled="disabled"/>
                         </div>

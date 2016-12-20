@@ -85,6 +85,41 @@ public class AlbumController {
         return "redirect:/albums/";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable Integer id){
+        if(!this.albumRepository.exists(id)){
+            return "redirect:/albums/";
+        }
+        Album album = this.albumRepository.findOne(id);
+        List<Category> categories = this.categoryRepository.findAll();
+
+        if (!isUserAlbumAuthorOrAdmin(album)) {
+            return "redirect:/albums/";
+        }
+
+        model.addAttribute("album", album);
+        model.addAttribute("categories", categories);
+        model.addAttribute("view", "album/edit");
+
+        return "base-layout";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editProcess(@PathVariable Integer id, AlbumBindingModel albumBindingModel){
+        if(!this.albumRepository.exists(id)){
+            return "redirect:/albums/";
+        }
+
+        Album album = this.albumRepository.findOne(id);
+        Category category =this.categoryRepository.findOne(albumBindingModel.getCategoryId());
+
+        album.setName(albumBindingModel.getName());
+        album.setCategory(category);
+        this.albumRepository.saveAndFlush(album);
+
+        return "redirect:/albums/";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Integer id) {
         if (!this.albumRepository.exists(id)) {
