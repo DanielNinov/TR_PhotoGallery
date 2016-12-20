@@ -4,7 +4,10 @@
             <form class="form-horizontal" th:action="@{/photo/upload}" method="POST">
                 <fieldset>
                     <legend>New Photo</legend>
-
+                    <table>
+                        <tr><td>File to upload:</td><td><input type="file" name="file" /></td></tr>
+                        <tr><td></td><td><input type="submit" value="Upload" /></td></tr>
+                    </table>
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_title">Photo Title</label>
                         <div class="col-sm-4 ">

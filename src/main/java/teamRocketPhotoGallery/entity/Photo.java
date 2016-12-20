@@ -3,9 +3,7 @@ package teamRocketPhotoGallery.entity;
 import javax.persistence.*;
 import javax.persistence.Id;
 import javax.persistence.Transient;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -116,7 +114,4 @@ public class Photo {
     public Set<Comment> getComments() {return comments;}
 
     public void setComments(Set<Comment> comments){this.comments = comments;}
-
-
-
 }
