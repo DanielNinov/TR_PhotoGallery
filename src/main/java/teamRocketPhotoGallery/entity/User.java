@@ -22,6 +22,10 @@ public class User {
 
     private Set<Photo> photos;
 
+    private Set<Comment> comments;
+
+    private Set<Album> albums;
+
     public User(String email, String fullName, String password) {
         this.email = email;
         this.password = password;
@@ -111,12 +115,13 @@ public class User {
     @Transient
     public boolean isCommentAuthor (Comment comment) { return Objects.equals(this.getId(), comment.getAuthor().getId()); }
 
-    private Set<Comment> comments;
-
     @OneToMany(mappedBy = "author")
     public Set<Comment> getComments() {return comments;}
 
     public void setComments(Set<Comment> comments){this.comments = comments;}
 
+    @OneToMany(mappedBy = "author")
+    public Set<Album> getAlbums() { return albums; }
 
+    public void setAlbums(Set<Album> albums) { this.albums = albums; }
 }

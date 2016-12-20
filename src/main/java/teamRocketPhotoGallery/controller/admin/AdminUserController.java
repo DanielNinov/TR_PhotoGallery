@@ -10,12 +10,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import teamRocketPhotoGallery.bindingModel.UserEditBindingModel;
-import teamRocketPhotoGallery.entity.Photo;
-import teamRocketPhotoGallery.entity.Role;
-import teamRocketPhotoGallery.entity.User;
-import teamRocketPhotoGallery.repository.PhotoRepository;
-import teamRocketPhotoGallery.repository.RoleRepository;
-import teamRocketPhotoGallery.repository.UserRepository;
+import teamRocketPhotoGallery.entity.*;
+import teamRocketPhotoGallery.repository.*;
 
 import java.util.HashSet;
 import java.util.List;
@@ -34,6 +30,8 @@ public class AdminUserController {
     private PhotoRepository photoRepository;
     @Autowired
     private RoleRepository roleRepository;
+    @Autowired
+    private AlbumRepository albumRepository;
 
     @GetMapping("/")
     public String listUsers(Model model) {
@@ -103,6 +101,9 @@ public class AdminUserController {
         User user = userRepository.findOne(id);
         for (Photo photo : user.getPhotos()) {
             this.photoRepository.delete(photo);
+        }
+        for (Album album : user.getAlbums()) {
+            this.albumRepository.delete(album);
         }
         this.userRepository.delete(user);
         return "redirect:/admin/users/";
