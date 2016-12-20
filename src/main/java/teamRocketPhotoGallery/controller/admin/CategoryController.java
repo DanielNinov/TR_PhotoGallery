@@ -8,9 +8,13 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teamRocketPhotoGallery.bindingModel.CategoryBindingModel;
+import teamRocketPhotoGallery.entity.Album;
 import teamRocketPhotoGallery.entity.Category;
+
 import teamRocketPhotoGallery.entity.Photo;
+import teamRocketPhotoGallery.repository.AlbumRepository;
 import teamRocketPhotoGallery.repository.CategoryRepository;
+
 import teamRocketPhotoGallery.repository.PhotoRepository;
 
 import java.util.Comparator;
@@ -28,6 +32,8 @@ public class CategoryController {
     private CategoryRepository categoryRepository;
     @Autowired
     private PhotoRepository photoRepository;
+    @Autowired
+    private AlbumRepository albumRepository;
 
     @GetMapping("/")
     public String list(Model model){
@@ -106,6 +112,10 @@ public class CategoryController {
         for (Photo photo: category.getPhotos()) {
             this.photoRepository.delete(photo);
         }
+        for (Album album: category.getAlbums()) {
+            this.albumRepository.delete(album);
+        }
+
         this.categoryRepository.delete(category);
 
         return "redirect:/admin/categories/";

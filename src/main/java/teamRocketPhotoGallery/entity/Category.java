@@ -13,14 +13,15 @@ public class Category {
     private Integer Id;
     private String name;
 
-   private Set<Photo> photos;
-
+    private Set<Photo> photos;
+    private Set<Album> albums;
 
     public Category(){
     }
     public Category(String name) {
         this.name = name;
         this.photos = new HashSet<>();
+        this.albums = new HashSet<>();
     }
 
     @Id
@@ -50,4 +51,14 @@ public class Category {
     public void setPhotos(Set<Photo> photos) {
         this.photos = photos;
     }
+
+    @OneToMany(mappedBy = "category")
+    public Set<Album> getAlbums() {
+        return albums;
+    }
+
+    public void setAlbums(Set<Album> albums) {
+        this.albums = albums;
+    }
+
 }
