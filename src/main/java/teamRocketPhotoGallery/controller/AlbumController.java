@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
 import teamRocketPhotoGallery.entity.Album;
@@ -104,7 +105,7 @@ public class AlbumController {
     @PostMapping("/edit/{id}")
     public String editProcess(@PathVariable Integer id, AlbumBindingModel albumBindingModel){
         if(!this.albumRepository.exists(id)){
-            return "redirect:/albums/";
+            return "redirect:/albums/create";
         }
 
         Album album = this.albumRepository.findOne(id);
@@ -141,7 +142,9 @@ public class AlbumController {
         }
 
         Album album = this.albumRepository.findOne(id);
-
+        if (!isUserAlbumAuthorOrAdmin(album)) {
+            return "redirect:/albums/";
+        }
         for (Photo photo : album.getPhotos()) {
             this.photoRepository.delete(photo);
         }
