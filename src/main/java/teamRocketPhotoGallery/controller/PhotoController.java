@@ -18,6 +18,7 @@ import teamRocketPhotoGallery.repository.*;
 
 import javax.persistence.Transient;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -98,10 +99,17 @@ public class PhotoController {
             model.addAttribute("user", entityUser);
         }
         List<Comment> comments = this.commentRepository.findAll();
+        List<Comment> commentsByPhoto = new LinkedList<>();
+
+        for (Comment comment : comments) {
+            if (comment.getPhoto().getId() == id){
+                commentsByPhoto.add(comment);
+            }
+        }
         Photo photo = this.photoRepository.findOne(id);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/details");
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments", commentsByPhoto);
         return "base-layout";
     }
 
