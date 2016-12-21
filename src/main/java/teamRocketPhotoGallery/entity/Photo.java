@@ -1,5 +1,7 @@
 package teamRocketPhotoGallery.entity;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.*;
 import javax.persistence.Id;
 import javax.persistence.Transient;
@@ -11,7 +13,7 @@ import java.util.Set;
 public class Photo {
     private Integer id;
 
-    private String fileName;
+//    private String fileName;
 
     private String title;
 
@@ -24,6 +26,8 @@ public class Photo {
     private Album album;
 
     private Set<Tag> tags;
+
+    private String prefix = "http://localhost:8080/files/";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -55,7 +59,9 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(name = "authorId")
-    public User getAuthor() { return author; }
+    public User getAuthor() {
+        return author;
+    }
 
     public void setAuthor(User author) {
         this.author = author;
@@ -73,9 +79,13 @@ public class Photo {
 
     @ManyToOne
     @JoinColumn(nullable = false, name = "albumId")
-    public Album getAlbum(){ return album; }
+    public Album getAlbum() {
+        return album;
+    }
 
-    public void setAlbum(Album album){ this.album = album; }
+    public void setAlbum(Album album) {
+        this.album = album;
+    }
 
     @ManyToMany()
     @JoinColumn(table = "photos_tags")
@@ -100,9 +110,9 @@ public class Photo {
 
     public Photo(String title, String content, User author, Album album, Category category, HashSet<Tag> tags) {
         this.title = title;
-        this.content = content;
+        this.content = prefix + content;
         this.author = author;
-        this.album = album ;
+        this.album = album;
         this.category = category;
         this.tags = tags;
     }
@@ -113,7 +123,11 @@ public class Photo {
     private Set<Comment> comments;
 
     @OneToMany(mappedBy = "author")
-    public Set<Comment> getComments() {return comments;}
+    public Set<Comment> getComments() {
+        return comments;
+    }
 
-    public void setComments(Set<Comment> comments){this.comments = comments;}
+    public void setComments(Set<Comment> comments) {
+        this.comments = comments;
+    }
 }
