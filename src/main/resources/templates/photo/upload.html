@@ -4,12 +4,15 @@
             <form class="form-horizontal" th:action="@{/photo/upload}" method="POST" enctype="multipart/form-data">
                 <fieldset>
                     <legend>New Photo</legend>
-                    <table>
-                        <tr>
-                            <td>File to upload:</td>
-                            <td><input type="file" name="file"/></td>
-                        </tr>
-                    </table>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="image_file">Image From File</label>
+                        <div class="col-sm-4 ">
+                        <label class="btn btn-default btn-file">
+                            Browse <input type="file" name="file" id="image_file"/>
+                        </label>
+                        </div>
+                    </div>
+
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_title">Photo Title</label>
                         <div class="col-sm-4 ">
@@ -19,10 +22,10 @@
                     </div>
 
                     <!--<div class="form-group">-->
-                        <!--<label class="col-sm-4 control-label" for="article_content">Image URL</label>-->
-                        <!--<div class="col-sm-6">-->
-                            <!--<textarea class="form-control" rows="1" id="article_content" name="content"></textarea>-->
-                        <!--</div>-->
+                    <!--<label class="col-sm-4 control-label" for="article_content">Image URL</label>-->
+                    <!--<div class="col-sm-6">-->
+                    <!--<textarea class="form-control" rows="1" id="article_content" name="content"></textarea>-->
+                    <!--</div>-->
                     <!--</div>-->
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_category">Category</label>

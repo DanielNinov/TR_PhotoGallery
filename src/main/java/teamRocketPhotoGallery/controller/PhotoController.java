@@ -165,7 +165,7 @@ public class PhotoController {
 
         photo.setAlbum(album);
         photo.setCategory(category);
-        photo.setContent(photoBindingModel.getFile().getOriginalFilename());
+        photo.setContent(photoBindingModel.getContent());
         photo.setTitle(photoBindingModel.getTitle());
         photo.setTags(tags);
 
