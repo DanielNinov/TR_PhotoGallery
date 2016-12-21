@@ -9,9 +9,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+
+
+import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.CommentBindingModel;
-import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
+
 import teamRocketPhotoGallery.entity.Comment;
 import teamRocketPhotoGallery.entity.Photo;
 import teamRocketPhotoGallery.entity.User;
@@ -42,13 +44,15 @@ public class CommentController {
         model.addAttribute("id", id);
         model.addAttribute("view", "/comment/create");
 
-
         return "base-layout";
 
     }
     @PostMapping("/comment/create/{id}")
     @PreAuthorize("isAuthenticated()")
     public String createProcess(CommentBindingModel commentBindingModel, @PathVariable Integer id){
+        if (StringUtils.isEmpty(commentBindingModel.getContent())) {
+            return "redirect:/";
+        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
@@ -63,9 +67,7 @@ public class CommentController {
         );
 
         this.commentRepository.saveAndFlush(commentEntity);
-
         return "redirect:/";
-
     }
     @GetMapping("/comment/delete/{id}")
     @PreAuthorize("isAuthenticated()")
@@ -100,7 +102,7 @@ public class CommentController {
     public boolean isUserAdmin(Comment comment) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
-        return userEntity.isAdmin();
+        return userEntity.isAdmin() || userEntity.isCommentAuthor(comment);
     }
 
 }

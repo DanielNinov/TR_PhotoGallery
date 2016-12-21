@@ -19,7 +19,6 @@
                             <a class="btn btn-default btn-xs" th:each="tag:${photo.tags}" th:href="@{/tag/{name}(name=${tag.name})}" th:text="${tag.name}"></a>
                         </p>
 
-
                         <footer>
                             <div class="pull-right">
                                 <a class="btn btn-default btn-xs"

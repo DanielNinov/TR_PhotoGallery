@@ -26,7 +26,6 @@ public class TagController {
 
         model.addAttribute("view", "tag/photos");
         model.addAttribute("tag", tag);
-
         return "base-layout";
     }
 }

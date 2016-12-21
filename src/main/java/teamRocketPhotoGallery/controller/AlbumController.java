@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.AlbumBindingModel;
 import teamRocketPhotoGallery.entity.Album;
@@ -53,7 +54,6 @@ public class AlbumController {
         albums = albums.stream().sorted(Comparator.comparingInt(Album::getId)).collect(Collectors.toList());
 
         model.addAttribute("albums", albums);
-
         return "base-layout";
     }
 
@@ -64,7 +64,6 @@ public class AlbumController {
         List<Category> categories = this.categoryRepository.findAll();
 
         model.addAttribute("categories", categories);
-
         return "base-layout";
     }
 
@@ -85,6 +84,40 @@ public class AlbumController {
         return "redirect:/albums/";
     }
 
+    @GetMapping("/edit/{id}")
+    public String edit(Model model, @PathVariable Integer id){
+        if(!this.albumRepository.exists(id)){
+            return "redirect:/albums/";
+        }
+        Album album = this.albumRepository.findOne(id);
+        List<Category> categories = this.categoryRepository.findAll();
+
+        if (!isUserAlbumAuthorOrAdmin(album)) {
+            return "redirect:/albums/";
+        }
+
+        model.addAttribute("album", album);
+        model.addAttribute("categories", categories);
+        model.addAttribute("view", "album/edit");
+        return "base-layout";
+    }
+
+    @PostMapping("/edit/{id}")
+    public String editProcess(@PathVariable Integer id, AlbumBindingModel albumBindingModel){
+        if(!this.albumRepository.exists(id)){
+            return "redirect:/albums/create";
+        }
+
+        Album album = this.albumRepository.findOne(id);
+        Category category =this.categoryRepository.findOne(albumBindingModel.getCategoryId());
+
+        album.setName(albumBindingModel.getName());
+        album.setCategory(category);
+
+        this.albumRepository.saveAndFlush(album);
+        return "redirect:/albums/";
+    }
+
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Integer id) {
         if (!this.albumRepository.exists(id)) {
@@ -99,7 +132,6 @@ public class AlbumController {
 
         model.addAttribute("album", album);
         model.addAttribute("view", "album/delete");
-
         return "base-layout";
     }
 
@@ -110,13 +142,14 @@ public class AlbumController {
         }
 
         Album album = this.albumRepository.findOne(id);
-
+        if (!isUserAlbumAuthorOrAdmin(album)) {
+            return "redirect:/albums/";
+        }
         for (Photo photo : album.getPhotos()) {
             this.photoRepository.delete(photo);
         }
 
         this.albumRepository.delete(album);
-
         return "redirect:/albums/";
     }
 

@@ -10,6 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.thymeleaf.util.StringUtils;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
 
 import teamRocketPhotoGallery.entity.*;
@@ -18,6 +20,7 @@ import teamRocketPhotoGallery.repository.*;
 
 import javax.persistence.Transient;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -68,6 +71,9 @@ public class PhotoController {
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String uploadProcess(PhotoBindingModel photoBindingModel) {
+        if (StringUtils.isEmpty(photoBindingModel.getTitle()) || StringUtils.isEmpty(photoBindingModel.getContent())) {
+            return "redirect:/photo/upload";
+        }
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
@@ -98,10 +104,17 @@ public class PhotoController {
             model.addAttribute("user", entityUser);
         }
         List<Comment> comments = this.commentRepository.findAll();
+        List<Comment> commentsByPhoto = new LinkedList<>();
+
+        for (Comment comment : comments) {
+            if (comment.getPhoto().getId() == id){
+                commentsByPhoto.add(comment);
+            }
+        }
         Photo photo = this.photoRepository.findOne(id);
         model.addAttribute("photo", photo);
         model.addAttribute("view", "photo/details");
-        model.addAttribute("comments", comments);
+        model.addAttribute("comments", commentsByPhoto);
         return "base-layout";
     }
 
@@ -133,6 +146,9 @@ public class PhotoController {
     @PostMapping("/photo/edit/{id}")
     @PreAuthorize("isAuthenticated()")
     public String editProcess(@PathVariable Integer id, PhotoBindingModel photoBindingModel) {
+        if (StringUtils.isEmpty(photoBindingModel.getTitle()) || StringUtils.isEmpty(photoBindingModel.getContent())) {
+            return "redirect:/photo/" + id;
+        }
         if (!this.photoRepository.exists(id)) {
             return "redirect:/";
         }
