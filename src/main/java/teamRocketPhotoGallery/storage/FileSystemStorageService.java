@@ -25,6 +25,15 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
+    public void store(MultipartFile file, String idName) {
+        try {
+            Files.copy(file.getInputStream(), this.rootLocation.resolve(idName));
+        } catch (IOException e) {
+            throw new StorageException("Failed to store file " + file.getOriginalFilename(), e);
+        }
+    }
+
+    @Override
     public void store(MultipartFile file) {
         try {
             if (file.isEmpty()) {

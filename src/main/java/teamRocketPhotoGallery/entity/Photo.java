@@ -11,6 +11,8 @@ import java.util.Set;
 public class Photo {
     private Integer id;
 
+    private String fileName;
+
     private String title;
 
     private String content;

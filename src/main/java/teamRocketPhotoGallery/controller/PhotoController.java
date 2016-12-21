@@ -7,14 +7,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
 
 import teamRocketPhotoGallery.entity.*;
 
 import teamRocketPhotoGallery.repository.*;
+import teamRocketPhotoGallery.storage.StorageService;
 
 import javax.persistence.Transient;
 import java.util.HashSet;
@@ -24,11 +24,17 @@ import java.util.stream.Collectors;
 
 @Controller
 public class PhotoController {
+    private final StorageService storageService;
     @Autowired
-    private PhotoRepository photoRepository;
+    public PhotoController(StorageService storageService) {
+        this.storageService = storageService;
+    }
 
     @Autowired
+    private PhotoRepository photoRepository;
+    @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -54,6 +60,8 @@ public class PhotoController {
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String upload(Model model) {
+
+
         model.addAttribute("view", "/photo/upload");
 
         List<Album> albums = this.albumRepository.findAll();
@@ -67,7 +75,7 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String uploadProcess(PhotoBindingModel photoBindingModel) {
+    public String uploadProcess(@RequestParam("file") MultipartFile file,PhotoBindingModel photoBindingModel) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
@@ -82,6 +90,7 @@ public class PhotoController {
                                         tags);
 
         this.photoRepository.saveAndFlush(photoEntity);
+        storageService.store(file);
         this.categoryRepository.saveAndFlush(category);
         return "redirect:/";
     }
