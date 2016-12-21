@@ -1,12 +1,16 @@
 package teamRocketPhotoGallery.bindingModel;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.validation.constraints.NotNull;
 
 public class PhotoBindingModel {
     @NotNull
     private String title;
-    @NotNull
+
     private String content;
+
+    private MultipartFile file;
 
     private Integer albumId;
 
@@ -46,5 +50,13 @@ public class PhotoBindingModel {
 
     public void setCategoryId(Integer categoryId) {
         this.categoryId = categoryId;
+    }
+
+    public MultipartFile getFile() {
+        return file;
+    }
+
+    public void setFile(MultipartFile file) {
+        this.file = file;
     }
 }

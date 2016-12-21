@@ -1,9 +1,17 @@
 <main xmlns:th="http://www.w3.org/1999/xhtml">
     <div class="container body-content span=8 offset=2">
         <div class="well">
-            <form class="form-horizontal" th:action="@{/photo/upload}" method="POST">
+            <form class="form-horizontal" th:action="@{/photo/upload}" method="POST" enctype="multipart/form-data">
                 <fieldset>
                     <legend>New Photo</legend>
+                    <div class="form-group">
+                        <label class="col-sm-4 control-label" for="image_file">Image From File</label>
+                        <div class="col-sm-4 ">
+                        <label class="btn btn-default btn-file">
+                            Browse <input type="file" name="file" id="image_file"/>
+                        </label>
+                        </div>
+                    </div>
 
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="article_title">Photo Title</label>
@@ -14,17 +22,11 @@
                     </div>
 
                     <div class="form-group">
-                    <label class="col-sm-4 control-label" for="article_content">Image URL</label>
-                    <div class="col-sm-6">
-                        <textarea class="form-control" rows="1" id="article_content" name="content"></textarea>
-                    </div>
-                </div>
-
-                    <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_category">Category</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="photo_category" name="categoryId">
-                                <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                                <option th:each="category : ${categories}" th:value="${category.id}"
+                                        th:text="${category.name}"></option>
                             </select>
                         </div>
                     </div>
@@ -34,7 +36,8 @@
                         <label class="col-sm-4 control-label" for="photo_album">Album</label>
                         <div class="col-sm-6">
                             <select class="form-control" id="photo_album" name="albumId">
-                                <option th:each="album : ${albums}" th:value="${album.id}" th:text="${album.name}"></option>
+                                <option th:each="album : ${albums}" th:value="${album.id}"
+                                        th:text="${album.name}"></option>
                             </select>
                         </div>
                     </div>
@@ -42,7 +45,8 @@
                     <div class="form-group">
                         <label class="col-sm-4 control-label" for="photo_tags">Tags</label>
                         <div class="col-sm-6">
-                            <input type="text" class="form-control" id="photo_tags" placeholder="Tags" name="tagString"/>
+                            <input type="text" class="form-control" id="photo_tags" placeholder="Tags"
+                                   name="tagString"/>
                         </div>
                     </div>
 

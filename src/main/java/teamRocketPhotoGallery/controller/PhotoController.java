@@ -1,6 +1,9 @@
 package teamRocketPhotoGallery.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,13 +15,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.thymeleaf.util.StringUtils;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import teamRocketPhotoGallery.bindingModel.PhotoBindingModel;
-
 import teamRocketPhotoGallery.entity.*;
-
 import teamRocketPhotoGallery.repository.*;
+import teamRocketPhotoGallery.storage.StorageService;
 
 import javax.persistence.Transient;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,11 +34,18 @@ import java.util.stream.Collectors;
 
 @Controller
 public class PhotoController {
-    @Autowired
-    private PhotoRepository photoRepository;
+    private final StorageService storageService;
 
     @Autowired
+    public PhotoController(StorageService storageService) {
+        this.storageService = storageService;
+    }
+
+    @Autowired
+    private PhotoRepository photoRepository;
+    @Autowired
     private UserRepository userRepository;
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -57,6 +71,8 @@ public class PhotoController {
     @GetMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
     public String upload(Model model) {
+
+
         model.addAttribute("view", "/photo/upload");
 
         List<Album> albums = this.albumRepository.findAll();
@@ -70,10 +86,12 @@ public class PhotoController {
 
     @PostMapping("/photo/upload")
     @PreAuthorize("isAuthenticated()")
-    public String uploadProcess(PhotoBindingModel photoBindingModel) {
+
+    public String uploadProcess(@RequestParam("file") MultipartFile file, PhotoBindingModel photoBindingModel) {
         if (StringUtils.isEmpty(photoBindingModel.getTitle()) || StringUtils.isEmpty(photoBindingModel.getContent())) {
             return "redirect:/photo/upload";
         }
+
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
@@ -81,13 +99,14 @@ public class PhotoController {
         HashSet<Tag> tags = this.findTagsFromString(photoBindingModel.getTagString());
 
         Photo photoEntity = new Photo(photoBindingModel.getTitle(),
-                                        photoBindingModel.getContent(),
-                                        userEntity,
-                                        album,
-                                        category,
-                                        tags);
+                photoBindingModel.getFile().getOriginalFilename(),
+                userEntity,
+                album,
+                category,
+                tags);
 
         this.photoRepository.saveAndFlush(photoEntity);
+        storageService.store(file);
         this.categoryRepository.saveAndFlush(category);
         return "redirect:/";
     }
@@ -131,7 +150,7 @@ public class PhotoController {
         }
 
         List<Album> albums = this.albumRepository.findAll();
-        List<Category> categories =this.categoryRepository.findAll();
+        List<Category> categories = this.categoryRepository.findAll();
         String tagString = photo.getTags().stream().map(Tag::getName).collect(Collectors.joining(", "));
 
         model.addAttribute("albums", albums);
@@ -160,7 +179,7 @@ public class PhotoController {
         }
 
         Album album = this.albumRepository.findOne(photoBindingModel.getAlbumId());
-        Category category =this.categoryRepository.findOne(photoBindingModel.getCategoryId());
+        Category category = this.categoryRepository.findOne(photoBindingModel.getCategoryId());
         HashSet<Tag> tags = this.findTagsFromString(photoBindingModel.getTagString());
 
         photo.setAlbum(album);
@@ -202,12 +221,20 @@ public class PhotoController {
             return "redirect:/photo/" + id;
         }
 
-        for (Comment comment : photo.getComments()){
+        for (Comment comment : photo.getComments()) {
             this.commentRepository.delete(comment);
         }
 
         this.photoRepository.delete(photo);
         return "redirect:/";
+    }
+
+    @GetMapping("/files/{filename:.+}")
+    @ResponseBody
+    public byte[] serveFile(@PathVariable String filename) throws IOException {
+
+        File file = new File("upload-dir/" + filename);
+        return Files.readAllBytes(file.toPath());
     }
 
     @Transient
@@ -221,10 +248,10 @@ public class PhotoController {
         HashSet<Tag> tags = new HashSet<>();
         String[] tagNames = tagString.split(",\\s*");
 
-        for(String tagName : tagNames){
+        for (String tagName : tagNames) {
             Tag currentTag = this.tagRepository.findByName(tagName);
 
-            if(currentTag == null){
+            if (currentTag == null) {
                 currentTag = new Tag(tagName);
                 this.tagRepository.saveAndFlush(currentTag);
             }
