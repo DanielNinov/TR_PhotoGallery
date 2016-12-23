@@ -22,7 +22,9 @@ public class PhotoBindingModel {
         return tagString;
     }
 
-    public void setTagString(String tagString) { this.tagString = tagString; }
+    public void setTagString(String tagString) {
+        this.tagString = tagString;
+    }
 
     public String getTitle() {
         return title;
