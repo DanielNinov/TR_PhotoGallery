@@ -43,6 +43,7 @@ public class PhotoController {
 
     @Autowired
     private PhotoRepository photoRepository;
+
     @Autowired
     private UserRepository userRepository;
 
