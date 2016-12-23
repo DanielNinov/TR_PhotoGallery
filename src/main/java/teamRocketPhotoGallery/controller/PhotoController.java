@@ -89,9 +89,9 @@ public class PhotoController {
     @PreAuthorize("isAuthenticated()")
 
     public String uploadProcess(@RequestParam("file") MultipartFile file, PhotoBindingModel photoBindingModel) {
-        if (StringUtils.isEmpty(photoBindingModel.getTitle()) || StringUtils.isEmpty(photoBindingModel.getContent())) {
-            return "redirect:/photo/upload";
-        }
+//        if (StringUtils.isEmpty(photoBindingModel.getTitle()) || StringUtils.isEmpty(photoBindingModel.getContent())) {
+//            return "redirect:/photo/upload";
+//        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByEmail(user.getUsername());
